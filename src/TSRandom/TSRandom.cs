@@ -1,9 +1,9 @@
 ﻿using System;
 
-namespace Soly.ThreadSafeRandom
+namespace Soly.Utils
 {
     /// <summary>
-    /// https://github.com/OBeautifulCode/OBeautifulCode.Math/blob/master/OBeautifulCode.Math/ThreadSafeRandom.cs
+    /// https://github.com/OBeautifulCode/OBeautifulCode.Math/blob/master/OBeautifulCode.Math.Recipes/ThreadSafeRandom.cs
     /// </summary>
     public static class TSRandom
     {
@@ -13,7 +13,8 @@ namespace Soly.ThreadSafeRandom
         private static readonly object Lock = new object();
 
         /// <summary>
-        /// A single random number generator
+        /// A single random number generator for the app domain,
+        /// used to seed thread-specific random number generators.
         /// </summary>
         private static Random random = new Random();
 
@@ -38,10 +39,10 @@ namespace Soly.ThreadSafeRandom
         /// <remarks>
         /// Random.Next generates a random number whose value ranges from zero to less than <see cref="int.MaxValue"/>.
         /// To generate a random number whose value ranges from zero to some other positive number, use the <see cref="Next(int)"/> method overload.
-        /// To generate a random number within a different range, use the <see cref="Next(int,int)"/> method overload
+        /// To generate a random number within a different range, use the <see cref="Next(int,int)"/> method overload.
         /// </remarks>
         /// <returns>
-        /// A 32-bit signed integer greater than or equal to zero and less than MaxValue
+        /// A 32-bit signed integer greater than or equal to zero and less than MaxValue.
         /// </returns>
         public static int Next()
         {
@@ -59,8 +60,9 @@ namespace Soly.ThreadSafeRandom
         /// A 32-bit signed integer greater than or equal to zero, and less than maxValue; that is, the range of return values
         /// ordinarily includes zero but not maxValue. However, if maxValue equals zero, maxValue is returned.
         /// </returns>
-        /// <exception cref="ArgumentOutOfRangeException">maxValue is less than zero.</exception>
-        public static int Next(int maxValue)
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="maxValue"/> is less than zero.</exception>
+        public static int Next(
+            int maxValue)
         {
             lock (Lock)
             {
@@ -80,7 +82,7 @@ namespace Soly.ThreadSafeRandom
         /// A 32-bit signed integer greater than or equal to minValue and less than maxValue; that is, the range of
         /// return values includes minValue but not maxValue. If minValue equals maxValue, minValue is returned.
         /// </returns>
-        /// <exception cref="ArgumentOutOfRangeException">minValue is greater than maxValue.</exception>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="minValue"/> is greater than <paramref name="maxValue"/>.</exception>
         public static int Next(int minValue, int maxValue)
         {
             lock (Lock)
@@ -95,10 +97,10 @@ namespace Soly.ThreadSafeRandom
         /// <param name="buffer">An array of bytes to contain random numbers.</param>
         /// <remarks>
         /// Each element of the array of bytes is set to a random number greater than or equal to zero, and less than or equal to MaxValue.
-        /// To generate a cryptographically secure random number suitable for creating a random password,
+        /// To generate a cryptographically secured random number suitable for creating a random password,
         /// for example, use a method such as RNGCryptoServiceProvider.GetBytes.
         /// </remarks>
-        /// <exception cref="ArgumentNullException">buffer is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="buffer"/> is null.</exception>
         public static void NextBytes(byte[] buffer)
         {
             lock (Lock)
